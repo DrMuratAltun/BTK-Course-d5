@@ -1,0 +1,31 @@
+from  sklearn.naive_bayes import GaussianNB
+from sklearn.naive_bayes import BernoulliNB
+from sklearn.linear_model import LogisticRegression
+#accuaracy
+from sklearn.metrics import accuracy_score, confusion_matrix, classification_report
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.ensemble import GradientBoostingClassifier
+from sklearn.neighbors import KNeighborsClassifier
+def model_classification(X,y):
+    '''
+    X: independent variable
+    y: dependent variable
+    return best model and its accuracy
+    '''
+    x_train,x_test,y_train,y_test=train_test_split(X,y,test_size=0.3,random_state=42)
+    models = [GaussianNB(),BernoulliNB(),LogisticRegression(),RandomForestClassifier(), GradientBoostingClassifier(), KNeighborsClassifier(n_neighbors=5)]
+    results=[]
+    for model in models:
+        model.fit(x_train,y_train)
+        model_predict=model.predict(x_test)
+        print("Model: ",model)
+        print("Model Accuracy: ",accuracy_score(model_predict,y_test))
+        print("Model Confusion Matrix: ",confusion_matrix(model_predict,y_test),"\n")
+        print("Model Classification Report: ",classification_report(model_predict,y_test))
+        print("-"*50)
+        results.append(accuracy_score(model_predict,y_test))
+    #best model
+    best_model=models[results.index(max(results))]
+    print("Best Model: ",best_model)
+    print("Best Model Accuracy: ",max(results))
+    return best_model,max(results), confusion_matrix(model_predict,y_test)
